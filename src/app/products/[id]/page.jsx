@@ -4,6 +4,41 @@ import Image from "next/image";
 import React from "react";
 import { FaStar } from "react-icons/fa";
 
+export async function generateMetadata({ params }) {
+	const { id } = await params;
+	const product = await getSingleProduct(id);
+
+	return {
+		title: `${product.title} | EduToy`,
+		description: product.description?.slice(0, 150),
+
+		openGraph: {
+			title: product.title,
+			description: product.description,
+			images: [
+				{
+					url:
+						product.image ||
+						"https://i.ibb.co.com/tGC0Nzr/image.png",
+					width: 1200,
+					height: 630,
+				},
+			],
+		},
+
+		twitter: {
+			card: "summary_large_image",
+			title: product.title,
+			description: product.description,
+			images: [product.image || "https://i.ibb.co.com/tGC0Nzr/image.png"],
+		},
+
+		alternates: {
+			canonical: `https://hero-kidz-project.vercel.app/products/${params.id}`,
+		},
+	};
+}
+
 const ProductDetails = async ({ params }) => {
 	const { id } = await params;
 	const product = await getSingleProduct(id);
@@ -33,7 +68,7 @@ const ProductDetails = async ({ params }) => {
 					height={420}
 					src={image}
 					alt={title}
-					className="w-full h-[420px] object-cover"
+					className="w-full h-105 object-cover"
 				/>
 			</div>
 
