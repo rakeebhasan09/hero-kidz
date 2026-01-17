@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { FaStar } from "react-icons/fa";
 
 const ProductCard = ({ product }) => {
-	const { title, image, price, ratings, reviews, sold } = product || {};
+	const { _id, title, image, price, ratings, reviews, sold } = product || {};
 
 	return (
 		<div className="card bg-base-100 shadow-md hover:shadow-xl duration-300 border rounded-lg">
@@ -37,6 +38,12 @@ const ProductCard = ({ product }) => {
 				<button className="btn btn-primary btn-sm mt-3 w-full">
 					Add to Cart
 				</button>
+				<Link
+					href={`/products/${_id}`}
+					className="btn btn-primary btn-sm mt-3 w-full"
+				>
+					View Details
+				</Link>
 			</div>
 		</div>
 	);
