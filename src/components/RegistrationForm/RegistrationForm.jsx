@@ -28,6 +28,7 @@ const RegistrationForm = () => {
 								type="text"
 								placeholder="Enter your name"
 								className="grow"
+								name="name"
 							/>
 						</div>
 					</label>
@@ -44,6 +45,7 @@ const RegistrationForm = () => {
 								placeholder="Enter your email"
 								className="grow"
 								required
+								name="email"
 							/>
 						</div>
 					</label>
@@ -60,6 +62,7 @@ const RegistrationForm = () => {
 								placeholder="••••••••"
 								className="grow"
 								required
+								name="password"
 							/>
 							<button
 								type="button"

@@ -6,6 +6,7 @@ import { FaCartPlus } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 const CartButton = ({ product }) => {
+	const islogin = true;
 	const path = usePathname();
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(false);
