@@ -1,21 +1,53 @@
 "use client";
 
+import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { IoEyeOff, IoEye } from "react-icons/io5";
 import Link from "next/link";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
+import SocialButtons from "../socialButtons/SocialButtons";
 
 export default function LoginForm() {
+	const router = useRouter();
 	const [showPassword, setShowPassword] = useState(false);
+	const [form, setForm] = useState({
+		email: "",
+		password: "",
+	});
+
+	const handleChange = (e) => {
+		setForm({ ...form, [e.target.name]: e.target.value });
+	};
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		const result = await signIn("credentials", {
+			email: form.email,
+			password: form.password,
+			redirect: false,
+		});
+
+		if (!result.ok) {
+			Swal.fire("error", "Email or Password not matched.", "error");
+		} else {
+			Swal.fire("success", "Welcome to Kidz Hub.", "success");
+			router.push("/");
+		}
+	};
 
 	return (
 		<div className="card w-full max-w-sm shadow-xl bg-base-100">
 			<div className="card-body">
 				<h2 className="text-2xl font-semibold text-center">Login</h2>
 
-				<form className="flex flex-col gap-4 mt-4">
+				<form
+					onSubmit={handleSubmit}
+					className="flex flex-col gap-4 mt-4"
+				>
 					{/* Email Input */}
 					<label className="form-control w-full">
 						<div className="label">
@@ -25,8 +57,10 @@ export default function LoginForm() {
 							<MdEmail className="text-xl" />
 							<input
 								type="email"
+								name="email"
 								placeholder="Enter your email"
 								className="grow outline-0 ring-0"
+								onChange={handleChange}
 								required
 							/>
 						</div>
@@ -43,6 +77,8 @@ export default function LoginForm() {
 								type={showPassword ? "text" : "password"}
 								placeholder="••••••••"
 								className="grow"
+								name="password"
+								onChange={handleChange}
 								required
 							/>
 							<button
@@ -72,10 +108,7 @@ export default function LoginForm() {
 				<div className="divider">OR</div>
 
 				{/* Google Login */}
-				<button className="btn btn-outline w-full flex items-center gap-2">
-					<FcGoogle className="text-2xl" />
-					Login with Google
-				</button>
+				<SocialButtons />
 			</div>
 		</div>
 	);

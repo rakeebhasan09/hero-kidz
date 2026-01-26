@@ -3,6 +3,7 @@ import Logo from "./Logo";
 import NavLink from "../buttons/NavLink";
 import Link from "next/link";
 import { GrCart } from "react-icons/gr";
+import AuthButtons from "../buttons/AuthButtons";
 
 const Navbar = () => {
 	const navItems = (
@@ -57,11 +58,7 @@ const Navbar = () => {
 				<Link href={"/cart"} className="btn btn-primary">
 					<GrCart />
 				</Link>
-				<Link href={"/login"}>
-					<button className="btn btn-primary btn-outline">
-						Login
-					</button>
-				</Link>
+				<AuthButtons />
 			</div>
 		</div>
 	);

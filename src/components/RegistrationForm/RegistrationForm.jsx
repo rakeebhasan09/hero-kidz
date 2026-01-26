@@ -7,16 +7,41 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import { IoEyeOff, IoEye } from "react-icons/io5";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa";
+import { postUser } from "@/actions/server/auth";
+import { useRouter } from "next/navigation";
+import SocialButtons from "../socialButtons/SocialButtons";
 
 const RegistrationForm = () => {
+	const router = useRouter();
 	const [showPassword, setShowPassword] = useState(false);
+	const [form, setForm] = useState({
+		name: "",
+		email: "",
+		password: "",
+	});
+
+	const handleChange = (e) => {
+		setForm({ ...form, [e.target.name]: e.target.value });
+	};
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		const result = await postUser(form);
+		if (result.acknowledged) {
+			alert("Successfull. Please Login");
+			router.push("/login");
+		}
+	};
 
 	return (
 		<div className="card w-full max-w-sm shadow-xl bg-base-100">
 			<div className="card-body">
 				<h2 className="text-2xl font-semibold text-center">Register</h2>
 
-				<form className="flex flex-col gap-4 mt-4">
+				<form
+					onSubmit={handleSubmit}
+					className="flex flex-col gap-4 mt-4"
+				>
 					{/* Name Input Field */}
 					<label className="form-control w-full">
 						<div className="label">
@@ -29,6 +54,7 @@ const RegistrationForm = () => {
 								placeholder="Enter your name"
 								className="grow"
 								name="name"
+								onChange={handleChange}
 							/>
 						</div>
 					</label>
@@ -46,6 +72,7 @@ const RegistrationForm = () => {
 								className="grow"
 								required
 								name="email"
+								onChange={handleChange}
 							/>
 						</div>
 					</label>
@@ -63,6 +90,7 @@ const RegistrationForm = () => {
 								className="grow"
 								required
 								name="password"
+								onChange={handleChange}
 							/>
 							<button
 								type="button"
@@ -89,13 +117,8 @@ const RegistrationForm = () => {
 				</p>
 
 				<div className="divider">OR</div>
-
-				{/* Google Login */}
-				<button className="btn btn-outline w-full flex items-center gap-2">
-					<FcGoogle className="text-2xl" />
-					Login with Google
-				</button>
 			</div>
+			<SocialButtons />
 		</div>
 	);
 };

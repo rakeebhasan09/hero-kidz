@@ -105,6 +105,11 @@ const ProductDetails = async ({ params }) => {
 					)}
 				</div>
 
+				{/* Actions */}
+				<CartButton
+					product={{ ...product, _id: product._id.toString() }}
+				></CartButton>
+
 				{/* Key Features */}
 				<div className="mt-6">
 					<h3 className="font-semibold mb-2">Key Features</h3>

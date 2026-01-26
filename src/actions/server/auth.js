@@ -31,3 +31,20 @@ export const postUser = async (payload) => {
 		};
 	}
 };
+
+export const loginUser = async (payload) => {
+	const { email, password } = payload;
+	// Check Payload
+	if (!email || !password) return null;
+	// Check User
+	const user = await dbConnect(collections.USERS).findOne({ email });
+	if (!user) return null;
+
+	// চেক কারেক্ট পাসওয়ার্ড
+	const isPassword = await bcrypt.compare(password, user.password);
+	if (isPassword) {
+		return user;
+	} else {
+		return null;
+	}
+};
