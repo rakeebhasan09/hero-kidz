@@ -7,11 +7,11 @@ import Swal from "sweetalert2";
 
 const SocialButtons = () => {
 	const params = useSearchParams();
-	console.log(params.get("callbackUrl") || "");
+
 	const hangleSocialLogin = async () => {
 		const result = await signIn("google", {
 			redirect: false,
-			callbackUrl: "/",
+			callbackUrl: params.get("callbackUrl") || "/",
 		});
 		console.log(result);
 		if (result.ok) {
