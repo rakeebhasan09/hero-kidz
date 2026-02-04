@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import CartItem from "../cards/CartItem";
+import Link from "next/link";
 
 const Cart = ({ cartItem = [] }) => {
 	const [items, setItems] = useState(cartItem);
@@ -24,8 +25,9 @@ const Cart = ({ cartItem = [] }) => {
 	const updateQuantity = (id, q) => {
 		setItems((prevItems) =>
 			prevItems.map((item) =>
-				item._id == id
+				item._id === id
 					? {
+							...item,
 							quantity: q,
 						}
 					: item,
@@ -42,7 +44,7 @@ const Cart = ({ cartItem = [] }) => {
 				<div className="flex-3 space-y-5 pb-20">
 					{items.map((item) => (
 						<CartItem
-							key={item._id.toString()}
+							key={item._id}
 							item={item}
 							removeItem={removeItem}
 							updateQuantity={updateQuantity}
@@ -94,15 +96,13 @@ const Cart = ({ cartItem = [] }) => {
 						</div>
 
 						{/* Confirm Button */}
-						<button
+						<Link
+							href={"/checkout"}
 							disabled={items.length === 0}
-							onClick={() =>
-								console.log("Order confirmed", items)
-							}
 							className="btn btn-primary w-full mt-5"
 						>
 							Confirm Order
-						</button>
+						</Link>
 					</div>
 				</div>
 			</div>

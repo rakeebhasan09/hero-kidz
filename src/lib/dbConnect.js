@@ -4,6 +4,7 @@ export const collections = {
 	PRODUCTS: "products",
 	USERS: "users",
 	CART: "cart",
+	ORDER: "orders",
 };
 const { MongoClient, ServerApiVersion } = require("mongodb");
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
