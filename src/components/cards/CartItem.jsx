@@ -1,11 +1,17 @@
 "use client";
 
-import { deleteItemsFromCart } from "@/actions/server/cart";
+import {
+	decreseItemDb,
+	deleteItemsFromCart,
+	increseItemDb,
+} from "@/actions/server/cart";
 import Image from "next/image";
+import { useState } from "react";
 import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
 
-const CartItem = ({ item, onIncrease, onDecrease }) => {
+const CartItem = ({ item, removeItem, updateQuantity }) => {
+	const [loading, setLoading] = useState(false);
 	const handleDeleteCart = () => {
 		Swal.fire({
 			title: "Are you sure?",
@@ -19,6 +25,7 @@ const CartItem = ({ item, onIncrease, onDecrease }) => {
 			if (result.isConfirmed) {
 				const result = await deleteItemsFromCart(item._id);
 				if (result.success) {
+					removeItem(item._id);
 					Swal.fire({
 						title: "Deleted!",
 						text: "Your file has been deleted.",
@@ -33,6 +40,26 @@ const CartItem = ({ item, onIncrease, onDecrease }) => {
 				}
 			}
 		});
+	};
+
+	const onIncrease = async () => {
+		setLoading(true);
+		const result = await increseItemDb(item._id, item.quantity);
+		if (result.success) {
+			Swal.fire("success", "Quantity increased.", "success");
+			updateQuantity(item._id, item.quantity + 1);
+		}
+		setLoading(false);
+	};
+
+	const onDecrease = async () => {
+		setLoading(true);
+		const result = await decreseItemDb(item._id, item.quantity);
+		if (result.success) {
+			Swal.fire("success", "Quantity decreased.", "success");
+			updateQuantity(item._id, item.quantity - 1);
+		}
+		setLoading(false);
 	};
 	return (
 		<div className="card card-side bg-base-100 shadow-md p-4 gap-4">
@@ -56,8 +83,9 @@ const CartItem = ({ item, onIncrease, onDecrease }) => {
 				{/* Quantity Controls */}
 				<div className="flex items-center gap-3 mt-2">
 					<button
-						onClick={() => onDecrease(item._id)}
+						onClick={onDecrease}
 						className="btn btn-xs btn-outline"
+						disabled={item.quantity === 1 || loading}
 					>
 						<FaMinus />
 					</button>
@@ -65,8 +93,9 @@ const CartItem = ({ item, onIncrease, onDecrease }) => {
 					<span className="font-medium">{item.quantity}</span>
 
 					<button
-						onClick={() => onIncrease(item._id)}
+						onClick={onIncrease}
 						className="btn btn-xs btn-outline"
+						disabled={item.quantity === 10 || loading}
 					>
 						<FaPlus />
 					</button>
