@@ -8,10 +8,13 @@ import { IoEyeOff, IoEye } from "react-icons/io5";
 import Link from "next/link";
 import Swal from "sweetalert2";
 import SocialButtons from "../socialButtons/SocialButtons";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginForm() {
 	const params = useSearchParams();
+	const router = useRouter();
+	const callback = params.get("callbackUrl") || "/";
+
 	const [showPassword, setShowPassword] = useState(false);
 	const [form, setForm] = useState({
 		email: "",
@@ -27,7 +30,7 @@ export default function LoginForm() {
 		const result = await signIn("credentials", {
 			email: form.email,
 			password: form.password,
-			// redirect: false,
+			redirect: false,
 			callbackUrl: params.get("callbackUrl") || "/",
 		});
 
@@ -35,6 +38,7 @@ export default function LoginForm() {
 			Swal.fire("error", "Email or Password not matched.", "error");
 		} else {
 			Swal.fire("success", "Welcome to Kidz Hub.", "success");
+			router.push(callback);
 		}
 	};
 

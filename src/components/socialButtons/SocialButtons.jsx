@@ -10,10 +10,10 @@ const SocialButtons = () => {
 
 	const hangleSocialLogin = async () => {
 		const result = await signIn("google", {
-			redirect: false,
+			// redirect: false,
 			callbackUrl: params.get("callbackUrl") || "/",
 		});
-		console.log(result);
+
 		if (result.ok) {
 			Swal.fire("susscess", "Welcome", "success");
 		} else {

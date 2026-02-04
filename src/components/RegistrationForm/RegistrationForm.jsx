@@ -10,9 +10,12 @@ import { FaUser } from "react-icons/fa";
 import { postUser } from "@/actions/server/auth";
 import { useRouter } from "next/navigation";
 import SocialButtons from "../socialButtons/SocialButtons";
+import { signIn } from "next-auth/react";
+import Swal from "sweetalert2";
 
 const RegistrationForm = () => {
 	const router = useRouter();
+	const callback = params.get("callbackUrl") || "/";
 	const [showPassword, setShowPassword] = useState(false);
 	const [form, setForm] = useState({
 		name: "",
@@ -28,8 +31,17 @@ const RegistrationForm = () => {
 		e.preventDefault();
 		const result = await postUser(form);
 		if (result.acknowledged) {
-			alert("Successfull. Please Login");
-			router.push("/login");
+			const result = await signIn("credentials", {
+				email: form.email,
+				password: form.password,
+				redirect: false,
+				callbackUrl: callback,
+			});
+
+			if (result.ok) {
+				Swal.fire("success", "Registration Successfull", "success");
+				router.push(callback);
+			}
 		}
 	};
 
