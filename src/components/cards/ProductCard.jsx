@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FaStar } from "react-icons/fa";
+import CartButton from "../buttons/CartButton";
 
 const ProductCard = ({ product }) => {
 	const { _id, title, image, price, ratings, reviews, sold } = product || {};
@@ -35,9 +36,9 @@ const ProductCard = ({ product }) => {
 					<p className="text-sm opacity-70">Sold: {sold}</p>
 				</div>
 
-				<button className="btn btn-primary btn-sm mt-3 w-full">
-					Add to Cart
-				</button>
+				<CartButton
+					product={{ ...product, _id: _id.toString() }}
+				></CartButton>
 				<Link
 					href={`/products/${_id}`}
 					className="btn btn-primary btn-sm mt-3 w-full"

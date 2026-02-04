@@ -1,4 +1,6 @@
 "use client";
+import { handleCart } from "@/actions/server/cart";
+import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -6,19 +8,32 @@ import { FaCartPlus } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 const CartButton = ({ product }) => {
-	const islogin = true;
+	const session = useSession();
 	const path = usePathname();
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(false);
+	const islogin = session?.status == "authenticated";
 
 	const handleAdd2Cart = async () => {
 		setIsLoading(true);
-		alert("Product ID");
+		if (islogin) {
+			const result = await handleCart({ product, inc: true });
+			if (result.success) {
+				Swal.fire("Product added.", product?.title, "success");
+			} else {
+				Swal.fire("error.", "Something Went Wrong", "error");
+			}
+			setIsLoading(false);
+		} else {
+			router.push(`/login?callbackUrl=${path}`);
+			setIsLoading(false);
+		}
 	};
 
 	return (
 		<div>
 			<button
+				disabled={session.status == "loading" || isLoading}
 				onClick={handleAdd2Cart}
 				className="btn btn-primary w-full flex gap-2"
 			>
