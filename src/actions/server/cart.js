@@ -11,25 +11,28 @@ const { dbConnect, collections } = require("@/lib/dbConnect");
 const cartCollection = dbConnect(collections.CART);
 
 // Save Product On Cart
-export const handleCart = async ({ product, inc = true }) => {
+export const handleCart = async (productId) => {
 	const { user } = (await getServerSession(authOptions)) || {};
 	if (!user) return { success: false };
 
 	// Get Cart Item = user.email && productId
-	const query = { email: user?.email, productId: product?._id };
+	const query = { email: user?.email, productId };
 	const isAdded = await cartCollection.findOne(query);
 
 	if (isAdded) {
 		// Exist = update cart
 		const updatedData = {
 			$inc: {
-				quantity: inc ? 1 : -1,
+				quantity: 1,
 			},
 		};
 
 		const result = await cartCollection.updateOne(query, updatedData);
 		return { success: Boolean(result.modifiedCount) };
 	} else {
+		const product = await dbConnect(collections.PRODUCTS).findOne({
+			_id: new ObjectId(productId),
+		});
 		// Not Exist = insert cart
 		const newData = {
 			productId: product?._id,
@@ -66,7 +69,7 @@ export const deleteItemsFromCart = async (id) => {
 		return { success: false };
 	}
 
-	const query = { _id: new ObjectId(id) };
+	const query = { _id: new ObjectId(id), email: user?.email };
 
 	const result = await cartCollection.deleteOne(query);
 
@@ -88,7 +91,7 @@ export const increseItemDb = async (id, quantity) => {
 		};
 	}
 
-	const query = { _id: new ObjectId(id) };
+	const query = { _id: new ObjectId(id), email: user?.email };
 
 	const updatedData = {
 		$inc: {
@@ -112,7 +115,7 @@ export const decreseItemDb = async (id, quantity) => {
 		};
 	}
 
-	const query = { _id: new ObjectId(id) };
+	const query = { _id: new ObjectId(id), email: user?.email };
 
 	const updatedData = {
 		$inc: {

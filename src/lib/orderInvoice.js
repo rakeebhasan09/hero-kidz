@@ -32,7 +32,7 @@ export const orderInvoiceTemplate = ({ orderId, items, totalPrice }) => {
                     <tr>
                       <td>${item.title}</td>
                       <td align="center">${item.quantity}</td>
-                      <td align="right">৳${item.price}</td>
+                      <td align="right">৳${item.price * item.quantity}</td>
                     </tr>
                   `,
 						)

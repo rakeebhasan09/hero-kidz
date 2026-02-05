@@ -1,10 +1,12 @@
 import RegistrationForm from "@/components/RegistrationForm/RegistrationForm";
-import React from "react";
+import React, { Suspense } from "react";
 
 const RegisterPage = () => {
 	return (
 		<section className="min-h-[calc(100vh-319px)] flex items-center justify-center">
-			<RegistrationForm />
+			<Suspense fallback={<p>Form Loading....</p>}>
+				<RegistrationForm />
+			</Suspense>
 		</section>
 	);
 };

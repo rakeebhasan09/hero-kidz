@@ -8,14 +8,18 @@ import { IoEyeOff, IoEye } from "react-icons/io5";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa";
 import { postUser } from "@/actions/server/auth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import SocialButtons from "../socialButtons/SocialButtons";
 import { signIn } from "next-auth/react";
 import Swal from "sweetalert2";
 
 const RegistrationForm = () => {
 	const router = useRouter();
-	const callback = params.get("callbackUrl") || "/";
+	// Read query params from URL (client-side only)
+	const searchParams = useSearchParams();
+
+	// Get callback URL safely
+	const callback = searchParams.get("callbackUrl") || "/";
 	const [showPassword, setShowPassword] = useState(false);
 	const [form, setForm] = useState({
 		name: "",

@@ -7,6 +7,7 @@ const CartPage = async () => {
 	const filteredItems = cartItems.map((item) => ({
 		...item,
 		_id: item._id.toString(),
+		productId: item.productId.toString(),
 	}));
 	return (
 		<div>
